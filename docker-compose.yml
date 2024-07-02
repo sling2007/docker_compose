@@ -1,5 +1,6 @@
 ### 启动所有服务    docker-compose up -d 
 ### 启动一个服务    docker-compose up -d centos7.9
+### 重启一个服务    docker restart centos7.9
 ### 进入这个容器    docker exec -it centos7.9 /bin/bash
 ### 查看启动日志    docker logs centos7.9
 ### 关闭容器        docker stop centos7.9
