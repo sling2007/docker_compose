@@ -1,0 +1,152 @@
+### 启动所有服务    docker-compose up -d 
+### 启动一个服务    docker-compose up -d centos7.9
+### 进入这个容器    docker exec -it centos7.9 /bin/bash
+### 查看启动日志    docker logs centos7.9
+### 关闭容器        docker stop centos7.9
+### 再次原配置启动  docker start centos7.9
+
+
+version: '3'  #docker-compose版本
+
+services: #服务列表
+############################################################
+  centos7.9:
+    image: centos:7.9.2009
+    container_name: centos7.9
+    tty: true # 模拟一个伪终端，防止退出
+    deploy:
+      #replicas: 3
+      resources: 
+        limits:
+          cpus: "2"
+          memory: 4096M
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - D:/develop/workspace/docker/centos7.9/data:/data
+      - D:/develop/workspace/docker/centos7.9/home:/home:ro
+############################################################
+  nginx:
+    image: nginx:latest
+    restart: always
+    hostname: nginx
+    container_name: nginx
+    privileged: true
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf/:/etc/nginx/                   # 配置文件
+      - ./nginx/cert/:/etc/cert/                    # ssl证书
+      - ./nginx/www/:/usr/share/nginx/html/         # 默认显示的index网页
+      - ./nginx/logs/:/var/log/nginx/               # 日志文件
+    environment:
+      TZ: Asia/Shanghai
+############################################################
+  zlmediakit: #docker run -id -p 1935:1935 -p 13222:80 -p 13443:443 -p 554:554 -p 10000:10000 -p 10000:10000/udp -p 8000:8000/udp -p 30000-30500:30000-30500 -p 30000-30500:30000-30500/udp --name zlmediakit --env MODE=standalone -e TZ="Asia/Shanghai" zlmediakit/zlmediakit:master
+    image: zlmediakit/zlmediakit:master
+    container_name: zlmediakit
+    #restart: always
+    ports:
+      - "1935:1935"
+      - "13222:80"
+      - "13443:443"
+      - "554:554"
+      - "10000:10000"
+      - "10000:10000/udp"
+      - "8000:8000/udp"
+      - "30000-30500:30000-30500"
+      - "30000-30500:30000-30500/udp"
+    environment:
+      MODE: standalone
+      TZ: Asia/Shanghai
+    #volumes:
+    #  - D:/develop/workspace/docker/zlmediakit:/opt/media
+############################################################
+  rabbitmq: #docker run -d --hostname my-rabbit --name rabbit -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=admin -p 15672:15672 -p 5672:5672 -p 25672:25672 -p 61613:61613 -p 1883:1883 rabbitmq:management
+    image: rabbitmq:management
+    container_name: rabbitmq
+    #restart: always
+    deploy:
+      #replicas: 3
+      resources: 
+        limits:
+          cpus: "2.00"
+          memory: 1G
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "25672:25672"
+      - "61613:61613"
+      - "1883:1883"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      TZ: Asia/Shanghai
+    
+############################################################
+  jobmanager: 
+    image: flink:latest
+    container_name: flink-jobmanager
+    expose:
+      - "6123"
+    ports: 
+      - 13211:8081
+    command: jobmanager
+    environment:
+      JOB_MANAGER_RPC_ADDRESS: jobmanager
+      TZ: Asia/Shanghai   
+############################################################
+  taskmanager: 
+    image: flink:latest
+    container_name: flink-taskmanager 
+    expose:
+      - "6121"
+      - "6122"
+    depends_on:
+      - jobmanager
+    ports: 
+      - 13212:8082
+    command: taskmanager
+    environment:
+      JOB_MANAGER_RPC_ADDRESS: jobmanager
+      TZ: Asia/Shanghai 
+
+############################################################
+  mysql8.0:
+    image: mysql:8.0
+    container_name: mysql8.0
+    ports:
+        - 13311:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: Marine.123
+      TZ: Asia/Shanghai 
+
+############################################################
+  mysql5.7:
+    image: mysql:5.7
+    container_name: mysql5.7
+    ports:
+        - 13312:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: Marine.123
+      TZ: Asia/Shanghai 
+############################################################
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+        - 13313:6379
+    environment:
+      TZ: Asia/Shanghai 
+    command: redis-server --requirepass Marine.123
+
+
+############################################################
+############################################################
+############################################################
+############################################################
+############################################################
+############################################################
+############################################################
+############################################################
