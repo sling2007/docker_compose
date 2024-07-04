@@ -117,33 +117,102 @@ services: #服务列表
   mysql8.0:
     image: mysql:8.0
     container_name: mysql8.0
+    privileged: true
     ports:
         - 13311:3306
     environment:
-      MYSQL_ROOT_PASSWORD: Marine.123
-      TZ: Asia/Shanghai 
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: "Root@1234"
+      MYSQL_USER_NAME: "hmntech"
+      MYSQL_USER_PASSWORD: "Marine.123"
+      MYSQL_DATABASE: "test"
+    volumes:
+      - ./mysql8.0/data:/var/lib/mysql
+      - ./mysql8.0/config:/etc/mysql/conf.d
+    command: --default-authentication-plugin=mysql_native_password
 
 ############################################################
   mysql5.7:
     image: mysql:5.7
     container_name: mysql5.7
+    privileged: true
     ports:
         - 13312:3306
     environment:
-      MYSQL_ROOT_PASSWORD: Marine.123
-      TZ: Asia/Shanghai 
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: "Root@1234"
+      MYSQL_USER_NAME: "hmntech"
+      MYSQL_USER_PASSWORD: "Marine.123"
+      MYSQL_DATABASE: "test"
+    # 将安装文件映射到容器中去
+    volumes:
+      - ./mysql5.7/data:/var/lib/mysql
+      - ./mysql5.7/config:/etc/mysql/conf.d
+     # - /home/environment/mysql/sql:/docker-entrypoint-initdb.d/
+     # - /home/environment/mysql/log:/var/log/mysql
+    command: --default-authentication-plugin=mysql_native_password #解决外部无法访问
 ############################################################
   redis:
     image: redis:latest
     container_name: redis
     ports:
-        - 13313:6379
+        - 6379:6379
     environment:
       TZ: Asia/Shanghai 
     command: redis-server --requirepass Marine.123
-
+############################################################
+  xxl-job-admin:
+    image: xxl-job-admin:2.3.0
+    container_name: xxl-job-admin
+    depends_on:
+        - mysql5.7
+    ports:
+        - 13316:8080
+    environment:
+      TZ: Asia/Shanghai 
+      PARAMS: --spring.datasource.url=jdbc:mysql://10.101.59.236:13312/xxl_job?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true --spring.datasource.username=root --spring.datasource.password=Root@1234 --spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+    volumes:
+      - ./xxl-job/data/applogs:/data/applogs
 
 ############################################################
+  nacos:
+    image: nacos:v2.1.0-slim
+    container_name: nacos
+    restart: always
+    privileged: true
+    depends_on:
+        - mysql5.7
+    ports:
+        - 8848:8848 
+        - 9848:9848 
+        - 9849:9849 
+    environment:
+      MYSQL_SERVICE_HOST: "10.101.59.236"
+      MYSQL_SERVICE_PORT: "13312"
+      MYSQL_SERVICE_USER: "root"
+      MYSQL_SERVICE_PASSWORD: "Root@1234"
+      MYSQL_SERVICE_DB_NAME: "nacos_config"
+      NACOS_SERVER_PORT: "8848"
+      PREFER_HOST_MODE: "hostname"
+      SPRING_DATASOURCE_PLATFORM: "mysql"
+      MODE: standalone
+    volumes:
+        - ./nacos/logs:/home/nacos/logs
+############################################################
+  minio:
+    image: minio:latest
+    container_name: minio
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: Marine.123
+    volumes:
+      - ./minio/data:/data
+    command: server --console-address ':9001' -address ":9000"   /data
+
 ############################################################
 ############################################################
 ############################################################
