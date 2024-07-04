@@ -2,6 +2,8 @@
 mysql5.7/data/*
 minio/data/*
 nginx/www/img/
+*.log.*
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
