@@ -2,6 +2,11 @@
 mysql5.7/data/*
 minio/data/*
 nginx/www/img/
+*.log.*
+nacos/logs/nacos_gc.log.0.current
+
+
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
