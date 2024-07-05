@@ -11,21 +11,21 @@ version: '3'  #docker-compose版本
 
 services: #服务列表
 ############################################################
-  centos7.9:
+  centos:
     image: centos:7.9.2009
-    container_name: centos7.9
+    container_name: centos
     tty: true # 模拟一个伪终端，防止退出
     deploy:
       #replicas: 3
       resources: 
         limits:
-          cpus: "2"
+          cpus: "0.5"
           memory: 4096M
     environment:
       TZ: Asia/Shanghai
     volumes:
-      - D:/develop/workspace/docker/centos7.9/data:/data
-      - D:/develop/workspace/docker/centos7.9/home:/home:ro
+      - ./centos7.9/data:/data
+      - ./centos7.9/home:/home:ro
 ############################################################
   nginx:
     image: nginx:latest
