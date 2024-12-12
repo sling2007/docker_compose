@@ -1,6 +1,7 @@
 ### 启动所有服务    docker-compose up -d 
 ### 启动一个服务    docker-compose up -d centos7.9
 ### 重启一个服务    docker-compose restart webapp
+### 关闭一个服务    docker-compose stop [service_name]
 ### 查看已启动容器的ip docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' centos7.9
 ### 重启一个服务    docker restart webapp
 ### 进入这个容器    docker exec -it centos7.9 /bin/bash
@@ -234,6 +235,46 @@ services: #服务列表
       - MINIO_SITE_REGION=cn-north-1
     
 
+
+############################################################
+  ## 默认用户名密码：初始化实例时设置 SYSDBA 的密码，默认值：SYSDBA001	
+  dameng:     ##  docker run -d -p 35236:5236 --restart=always --name=dm8_test --privileged=true -e LD_LIBRARY_PATH=/opt/dmdbms/bin -e PAGE_SIZE=16 -e EXTENT_SIZE=32 -e LOG_SIZE=1024 -e UNICODE_FLAG=1  -e INSTANCE_NAME=dm8_test -v /opt/data:/opt/dmdbms/data dm8_single:dm8_20241022_rev244896_x86_rh6_64
+    container_name: dm8_test
+    image: dm8_single:dm8_20241022_rev244896_x86_rh6_64
+    #restart: always
+    privileged: true
+    ports:
+      - 35236:5236
+    volumes:
+      - ./dameng/dm8/opt/data:/opt/dmdbms/data
+    environment:
+      - LD_LIBRARY_PATH=/opt/dmdbms/bin
+      - PAGE_SIZE=16
+      - EXTENT_SIZE=32
+      - LOG_SIZE=1024
+      - UNICODE_FLAG=1
+      - INSTANCE_NAME=dm8_test
+      #- SYSDBA_PWD=SYSDBA001
+
+############################################################
+  ##
+  oracle:   ## docker run -d  -p 1524:1521 -p 5502:5500 -e ORACLE_SID=ORCLCDB -e ORACLE_PDB=ORCLPDB1 -e ORACLE_PWD=123456 -e ORACLE_EDITION=standard -e ORACLE_CHARACTERSET=AL32UTF8 --name orcl19c_03 registry.cn-hangzhou.aliyuncs.com/zhuyijun/oracle:19c
+    container_name: orcl19c_03
+    image: registry.cn-hangzhou.aliyuncs.com/zhuyijun/oracle:19c
+    #restart: always
+    privileged: true
+    ports:
+      - 1524:1521
+      - 5502:5500
+    volumes:
+      - ./oracle/oracle19c/mydata/oracle/oradata:/opt/oracle/oradata
+    environment:
+      - ORACLE_SID=ORCLCDB
+      - ORACLE_PDB=ORCLPDB1
+      - ORACLE_PWD=123456
+      - ORACLE_EDITION=standard
+      - ORACLE_CHARACTERSET=AL32UTF8
+      
 
 
 
