@@ -203,10 +203,9 @@ services: #服务列表
     volumes:
         - ./nacos/logs:/home/nacos/logs
 ############################################################
-  minio:
-    image: minio:latest
-    container_name: minio
-    #restart: always
+  minio1:
+    image: quay.io/minio/minio:latest
+    container_name: minio1
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -214,27 +213,28 @@ services: #服务列表
       MINIO_ACCESS_KEY: admin
       MINIO_SECRET_KEY: Marine.123
     volumes:
-      - ./minio/data:/data
-    command: server --console-address ':9001' -address ":9000"   /data
-
+      - ./minio/m1/data1:/data1
+      - ./minio/m1/data2:/data2
+      - ./minio/m1/data3:/data3
+      - ./minio/m1/data4:/data4 
+    # 多个 /data1 /data2 表示使用集群模式 
+    command: server /data1 /data2 /data3 /data4 --console-address ':9001' -address ":9000"  
 ############################################################
   minio2:
+    image: quay.io/minio/minio:latest
     container_name: minio2
-    image: bitnami/minio:latest
-    #restart: always
-    privileged: true
     ports:
-      - 9000:9000
-      - 9001:9001
-    volumes:
-      - ./minio/data:/bitnami/minio/data
+      - "9100:9000"
+      - "9101:9001"
     environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=Marine.123
-      - TZ=Asia/Shanghai
-      - MINIO_SITE_REGION=cn-north-1
-    
-
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: Marine.123
+    volumes:
+      - ./minio/m2/data1:/data1
+      - ./minio/m2/data2:/data2
+      - ./minio/m2/data3:/data3
+      - ./minio/m2/data4:/data4 
+    command: server /data1 /data2 /data3 /data4 --console-address ':9001' -address ":9000"  
 
 ############################################################
   ## 默认用户名密码：初始化实例时设置 SYSDBA 的密码，默认值：SYSDBA001	
