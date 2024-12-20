@@ -14,6 +14,9 @@
 ### 再次原配置启动  docker start centos7.9
 ```
 
+### 下载镜像
+对于被墙的docker-hub等镜像仓库，可以用下面方式，把镜像拷贝到aliyun仓库。然后从aliyun再做docker pull。
+https://github.com/sling2007/docker_image_pusher
 
 ### Minio集群
 
