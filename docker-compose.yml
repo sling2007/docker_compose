@@ -15,7 +15,7 @@ version: '3'  #docker-compose版本
 services: #服务列表
 ############################################################
   centos:
-    image: centos:7.9.2009
+    image: registry.cn-beijing.aliyuncs.com/sunling/centos:7.9.2009
     container_name: centos
     tty: true # 模拟一个伪终端，防止退出
     deploy:
@@ -32,7 +32,7 @@ services: #服务列表
 
 ############################################################
   nginx:
-    image: nginx:latest
+    image: registry.cn-beijing.aliyuncs.com/sunling/nginx:latest
     #restart: always
     hostname: nginx
     container_name: nginx
@@ -137,7 +137,7 @@ services: #服务列表
 
 ############################################################
   mysql5.7:
-    image: mysql:5.7.44
+    image: registry.cn-beijing.aliyuncs.com/sunling/mysql:5.7.44
     container_name: mysql5.7
     privileged: true
     ports:
@@ -157,7 +157,7 @@ services: #服务列表
     command: --default-authentication-plugin=mysql_native_password #解决外部无法访问
 ############################################################
   redis:
-    image: redis:latest
+    image: registry.cn-beijing.aliyuncs.com/sunling/redis:latest
     container_name: redis
     ports:
         - 6379:6379
@@ -180,7 +180,7 @@ services: #服务列表
 
 ############################################################
   nacos:
-    image: nacos/nacos-server:v2.1.0-slim
+    image: registry.cn-beijing.aliyuncs.com/sunling/nacos-server:v2.1.0-slim
     container_name: nacos
     #restart: always
     privileged: true
@@ -260,7 +260,7 @@ services: #服务列表
   ## docker run -d  -p 1524:1521 -p 5502:5500 -e ORACLE_SID=ORCLCDB -e ORACLE_PDB=ORCLPDB1 -e ORACLE_PWD=123456 -e ORACLE_EDITION=standard -e ORACLE_CHARACTERSET=AL32UTF8 --name orcl19c_03 registry.cn-hangzhou.aliyuncs.com/zhuyijun/oracle:19c
   oracle:  
     container_name: orcl19c_03
-    image: registry.cn-hangzhou.aliyuncs.com/zhuyijun/oracle:19c
+    image: registry.cn-beijing.aliyuncs.com/sunling/oracle:19c
     #restart: always
     privileged: true
     ports:
@@ -279,7 +279,7 @@ services: #服务列表
   ## docker run -itd --name=kkfileview --volume=/data/java/kkfileview/config/application.properties:/opt/kkfileview:4.1.0/config/application.properties -p 8860:8012 kkfileview
   kkfile:   
     container_name: kkfile
-    image: 10.101.25.16/environment/kkfileview:4.4.0
+    image: registry.cn-beijing.aliyuncs.com/sunling/kkfileview:4.4.0
     #restart: always
     privileged: true
     ports:
