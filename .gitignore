@@ -5,7 +5,7 @@ nginx/www/img/
 *.log.*
 nacos/logs/nacos_gc.log.0.current
 
-
+*current
 
 target/
 !.mvn/wrapper/maven-wrapper.jar

@@ -288,10 +288,25 @@ services: #服务列表
       - ./kkfile/data/java/kkfileview/config:/opt/kkfileview:4.1.0/config
 
 
-
-
-
 ############################################################
+  ## docker run -d --name zookeeper -p 2181:2181 -e TZ="Asia/Shanghai" -v /path/to/data:/data -v /path/to/conf:/conf zookeeper:3.7.1
+  zookeeper:   
+    container_name: zookeeper
+    image: registry.cn-beijing.aliyuncs.com/sunling/zookeeper:3.7.1
+    ports:
+      - 2181:2181
+    volumes:
+      - ./zookeeper/path/to/data:/data
+      - ./zookeeper/path/to/conf:/conf
+    environment:
+      - TZ="Asia/Shanghai"
+      - ORACLE_PDB=ORCLPDB1
+
+
+
+
+
+
 ############################################################
 ############################################################
 ############################################################
