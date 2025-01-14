@@ -287,7 +287,7 @@ services: #服务列表
       - 41521:1521
       - 40022:22
     volumes:
-      - ./oracle/oracle11g/mydata/oracle/oradata:/opt/oracle/oradata
+      - ./oracle/oracle11g/mydata/oracle/oradata:/u01/app/oracle/oradata
     #environment:
 
 
