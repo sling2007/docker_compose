@@ -274,7 +274,23 @@ services: #服务列表
       - ORACLE_PWD=123456
       - ORACLE_EDITION=standard
       - ORACLE_CHARACTERSET=AL32UTF8
-      
+
+
+############################################################
+  ## docker run -d --name oracle11g -p 40022:22 -p 41521:1521 -p 48080:8080 rohitbasu77/oracle11g:latest
+  oracle11g:  
+    container_name: oracle11g
+    image: rohitbasu77/oracle11g:latest
+    #restart: always
+    #privileged: true
+    ports:
+      - 41521:1521
+      - 40022:22
+    volumes:
+      - ./oracle/oracle11g/mydata/oracle/oradata:/opt/oracle/oradata
+    #environment:
+
+
 ############################################################
   ## docker run -itd --name=kkfileview --volume=/data/java/kkfileview/config/application.properties:/opt/kkfileview:4.1.0/config/application.properties -p 8860:8012 kkfileview
   kkfile:   
