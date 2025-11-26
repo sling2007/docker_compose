@@ -6,7 +6,8 @@
 ### 重启一个服务    docker restart webapp
 ### 进入这个容器    docker exec -it centos7.9 /bin/bash
 ### 查看启动日志    docker logs centos7.9
-### 关闭容器        docker stop centos7.9
+### 关闭一个容器    docker stop centos7.9
+### 关闭所有容器    docker stop 
 ### 再次原配置启动  docker start centos7.9
 
 
