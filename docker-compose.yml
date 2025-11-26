@@ -319,12 +319,46 @@ services: #服务列表
       - ORACLE_PDB=ORCLPDB1
 
 
+############################################################
+  rocketmq-namesrv:   ### step 1
+    image: registry.cn-beijing.aliyuncs.com/sunling/rocketmq:5.3.1
+    container_name: rocketmq-namesrv
+    ports:
+      - "9876:9876"
+    environment:
+      - MAX_POSSIBLE_HEAP=100000000
+    command: sh mqnamesrv
 
+  rocketmq-broker:    ### step 2
+    image: registry.cn-beijing.aliyuncs.com/sunling/rocketmq:5.3.1
+    container_name: rocketmq-broker
+    ports:
+      - "10911:10911"
+      - "10909:10909"
+    environment:
+      - NAMESRV_ADDR=rocketmq-namesrv:9876
+      - MAX_POSSIBLE_HEAP=200000000
+    command: sh mqbroker -c /home/rocketmq/rocketmq-5.3.1/conf/broker.conf
+    depends_on:
+      - rocketmq-namesrv
 
-
+  rocketmq-dashboard:    ### step 3 http://127.0.0.1:28082/ 
+    image: registry.cn-beijing.aliyuncs.com/sunling/rocketmq-dashboard:latest
+    container_name: rocketmq-dashboard
+    ports:
+      - "28082:8082"
+    environment:
+      - ROCKETMQ_CONFIG_NAMESRVADDR=rocketmq-namesrv:9876
+    depends_on:
+      - rocketmq-namesrv
 
 ############################################################
-############################################################
+
+
+
+
+
+
 ############################################################
 ############################################################
 ############################################################
